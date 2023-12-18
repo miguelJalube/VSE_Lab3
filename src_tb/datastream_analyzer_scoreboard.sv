@@ -53,6 +53,11 @@ class datastream_analyzer_scoreboard#(int DATASIZE = 8, int WINDOWSIZE = 4);
             // but it can obviously be changed if required
             datastream_to_scoreboard_fifo.get(datastream_trans);
             monitor_to_scoreboard_fifo.get(stats_trans);
+/*
+            assert(datastream_trans.data[stats_trans.min] == min(datastream_trans.data));
+            assert(datastream_trans.data[stats_trans.max] == max(datastream_trans.data));
+            assert(datastream_trans.data[stats_trans.moy] == moy(datastream_trans.data));
+*/
         end
 
         $display("Scoreboard : End");

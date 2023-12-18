@@ -32,7 +32,17 @@ Ver   Date        Person     Comments
 `define STATS_PACKET_SV
 
 class stats_transaction#(int DATASIZE = 8, int WINDOWSIZE = 4);
-    // TODO : Implement your stats_transaction
+
+/*  Whole data
+    bit [DATASIZE-1:0] min;
+    bit [DATASIZE-1:0] max;
+    bit [DATASIZE-1:0] moy;
+*/
+
+    // Indices of stats
+    int min;
+    int max;
+    int moy;
 
 endclass : stats_transaction
 
