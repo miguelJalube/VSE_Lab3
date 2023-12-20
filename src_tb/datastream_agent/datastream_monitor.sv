@@ -43,10 +43,14 @@ class datastream_monitor#(int DATASIZE = 8, int WINDOWSIZE = 4);
         while (1) begin
             datastream_transaction#(DATASIZE, WINDOWSIZE) trans = new;
             // TODO : Implement the monitor's behavior
+            
+            foreach (trans.data[i]) begin
+                trans.data[i] = vif.data_i;
+            end
             @(posedge vif.clk_i);
 
             // At some stage send the packet to the scoreboard
-            // monitor_to_scoreboard_fifo.put(trans);
+            monitor_to_scoreboard_fifo.put(trans);
         end
     endtask
 

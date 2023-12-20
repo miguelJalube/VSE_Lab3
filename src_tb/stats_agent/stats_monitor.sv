@@ -51,10 +51,33 @@ class stats_monitor#(int DATASIZE = 8, int WINDOWSIZE = 4);
             @(posedge vif.clk_i);
 
             // TODO : Implement the monitor behavior
+            // TODO : A tester
+            logic [DATASIZE-1:0] min;
+            min = vif.data_o[i];
+            for (vif.data_o[i]) begin
+                if(vif.data_o[i] < min) begin
+                    min = vif.data_o[i];
+                end
+            end
 
+            logic [DATASIZE-1:0] max;
+            max = vif.data_o[i];
+            for (vif.data_o[i]) begin
+                if(vif.data_o[i] > max) begin
+                    max = vif.data_o[i];
+                end
+            end
+
+            logic [DATASIZE-1:0] moy;
+            logic [DATASIZE-1:0] sum;
+            for (vif.data_o[i]) begin
+                sum = sum + vif.data_o[i];
+            end
+
+            moy = sum / WINDOWSIZE;
 
             // At some stage, put a transaction in the FIFO
-            // monitor_to_scoreboard_fifo.put(stats_trans);
+            monitor_to_scoreboard_fifo.put(stats_trans);
 
         end
     $display("Monitor : end");
