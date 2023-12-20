@@ -30,7 +30,6 @@ Ver   Date        Person     Comments
 `ifndef DATASTREAM_DRIVER_SV
 `define DATASTREAM_DRIVER_SV
 
-import objections_pkg::*;
 
 class datastream_driver#(int DATASIZE = 8, int WINDOWSIZE = 4);
 
@@ -46,6 +45,11 @@ class datastream_driver#(int DATASIZE = 8, int WINDOWSIZE = 4);
 
         // TODO : Drive the transaction
         vif.valid_i <= 1;
+        foreach (packet.data[i]) begin
+            vif.data_i <= packet.data[i];
+            @(posedge vif.clk_i);
+        end
+        vif.valid_i <= 0;
         @(posedge vif.clk_i);
         objections_pkg::objection::get_inst().drop();
  

@@ -80,7 +80,7 @@ class datastream_sequencer#(int DATASIZE = 8, int WINDOWSIZE = 4);
         automatic datastream_transaction#(DATASIZE, WINDOWSIZE) trans;
         trans = new;
         foreach (trans.data[i]) begin
-            trans.data[i] <= '{ (DATASIZE){0} };
+            trans.data[i] <= '{ (DATASIZE){1} };
             trans.data[i][0] <= 0;
             trans.data[i][DATASIZE-1] <= 0;
         end
@@ -92,7 +92,8 @@ class datastream_sequencer#(int DATASIZE = 8, int WINDOWSIZE = 4);
         automatic datastream_transaction#(DATASIZE, WINDOWSIZE) trans;
         trans = new;
         foreach (trans.data[i]) begin
-            trans.data[i] <= '{(DATASIZE/2){0}} & '{(DATASIZE/2){1}};
+            trans.data[i][DATASIZE/2-1:0] <= '{ (DATASIZE/2){0} };
+            trans.data[i][DATASIZE-1:DATASIZE/2] <= '{ (DATASIZE/2){1} };
         end
         $display(trans.data);
         sequencer_to_driver_fifo.put(trans);
@@ -102,7 +103,8 @@ class datastream_sequencer#(int DATASIZE = 8, int WINDOWSIZE = 4);
         automatic datastream_transaction#(DATASIZE, WINDOWSIZE) trans;
         trans = new;
         foreach (trans.data[i]) begin
-            trans.data[i] <= '{ {(DATASIZE/2){1}}, {(DATASIZE/2){0}} };
+            trans.data[i][DATASIZE/2-1:0] <= '{ (DATASIZE/2){1} };
+            trans.data[i][DATASIZE-1:DATASIZE/2] <= '{ (DATASIZE/2){0} };
         end
         $display(trans.data);
         sequencer_to_driver_fifo.put(trans);
