@@ -33,7 +33,7 @@ Ver   Date        Person     Comments
 
 class datastream_transaction#(int DATASIZE = 8, int WINDOWSIZE = 4);
 
-    rand bit[WINDOWSIZE-1:0][DATASIZE-1:0] data;
+    rand bit[DATASIZE-1:0] data[WINDOWSIZE-1:0];
 
 endclass : datastream_transaction
 

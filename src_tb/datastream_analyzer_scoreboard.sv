@@ -39,28 +39,60 @@ class datastream_analyzer_scoreboard#(int DATASIZE = 8, int WINDOWSIZE = 4);
     stats_fifo_t monitor_to_scoreboard_fifo;
 
     task run;
+        bit [DATASIZE-1:0] min_val;
+        bit [DATASIZE-1:0] max_val;
+        bit [DATASIZE-1:0] mean_val;
+    begin
         automatic datastream_transaction datastream_trans = new;
         automatic stats_transaction stats_trans = new;
 
         $display("Scoreboard : Start");
 
-
         while (1) begin
-
-            // TODO : Implement the scoreboard behavior
             
             // Get data from the monitors. Here there is one transaction from each,
             // but it can obviously be changed if required
             datastream_to_scoreboard_fifo.get(datastream_trans);
             monitor_to_scoreboard_fifo.get(stats_trans);
-/*
-            assert(datastream_trans.data[stats_trans.min] == min(datastream_trans.data));
-            assert(datastream_trans.data[stats_trans.max] == max(datastream_trans.data));
-            assert(datastream_trans.data[stats_trans.moy] == moy(datastream_trans.data));
-*/
+
+            // display types
+            $display("min: %b", stats_trans.min);
+            
+            // compute min
+            min_val = datastream_trans.data[0];
+            foreach (datastream_trans.data[i]) begin
+                if (datastream_trans.data[i] < min_val) begin
+                    min_val = datastream_trans.data[i];
+                end
+            end
+            $display("min_val: %b", min_val);
+
+            // compute max
+            max_val = datastream_trans.data[0];
+            foreach (datastream_trans.data[i]) begin
+                if (datastream_trans.data[i] > max_val) begin
+                    max_val = datastream_trans.data[i];
+                end
+            end
+            $display("max_val: %b", max_val);
+
+            // compute mean
+            mean_val = datastream_trans.data[0];
+            foreach (datastream_trans.data[i]) begin
+                if (datastream_trans.data[i] < mean_val) begin
+                    mean_val = datastream_trans.data[i];
+                end
+            end
+            $display("mean_val: %b", mean_val);
+            
+            assert(stats_trans.min == min_val);
+            assert(stats_trans.max == max_val);
+            assert(stats_trans.moy == mean_val);
         end
 
         $display("Scoreboard : End");
+    
+    end
     endtask : run
 
 endclass : datastream_analyzer_scoreboard

@@ -25,6 +25,7 @@ Dependencies : -
 Modifications :
 Ver   Date        Person     Comments
 1.0   08.12.2023  YTA        Initial version
+1.1   27.12.2023  MJE, LSM   Add min, max and moy computation
 
 *******************************************************************************/
 
@@ -40,47 +41,38 @@ class stats_monitor#(int DATASIZE = 8, int WINDOWSIZE = 4);
 
     stats_fifo_t monitor_to_scoreboard_fifo;
 
-
-
     task run;
         $display("Monitor : start");
 
         while (1) begin
 
             stats_transaction#(DATASIZE, WINDOWSIZE) stats_trans = new;
+            
             @(posedge vif.clk_i);
 
-            // TODO : Implement the monitor behavior
-            // TODO : A tester
-            logic [DATASIZE-1:0] min;
-            min = vif.data_o[i];
-            for (vif.data_o[i]) begin
-                if(vif.data_o[i] < min) begin
-                    min = vif.data_o[i];
-                end
-            end
+            // Lis la valeur min
+            wait(vif.valid_o == 1);
+            wait(vif.frame_o == 1);
+            stats_trans.min = vif.data_o;
+            @(posedge vif.clk_i);
 
-            logic [DATASIZE-1:0] max;
-            max = vif.data_o[i];
-            for (vif.data_o[i]) begin
-                if(vif.data_o[i] > max) begin
-                    max = vif.data_o[i];
-                end
-            end
+            // Lis la valeur max
+            wait(vif.valid_o == 1);
+            wait(vif.frame_o == 1);
+            stats_trans.max = vif.data_o;
+            @(posedge vif.clk_i);
 
-            logic [DATASIZE-1:0] moy;
-            logic [DATASIZE-1:0] sum;
-            for (vif.data_o[i]) begin
-                sum = sum + vif.data_o[i];
-            end
-
-            moy = sum / WINDOWSIZE;
+            // Lis la valeur moyenne
+            wait(vif.valid_o == 1);
+            wait(vif.frame_o == 1);
+            stats_trans.moy = vif.data_o;
+            @(posedge vif.clk_i);
 
             // At some stage, put a transaction in the FIFO
             monitor_to_scoreboard_fifo.put(stats_trans);
 
         end
-    $display("Monitor : end");
+        $display("Monitor : end");
     endtask : run
 
 endclass : stats_monitor
