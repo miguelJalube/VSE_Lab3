@@ -67,7 +67,7 @@ class datastream_driver#(int DATASIZE = 8, int WINDOWSIZE = 4);
 
     task run;
         automatic datastream_transaction#(DATASIZE, WINDOWSIZE) trans;
-        $display("[datastream_driver.sv] Driver : start");
+        `DEBUG_DISPLAY($sformatf("[datastream_driver.sv] Driver : start"));
 
         vif.valid_i <= 0;
         vif.data_i <= 0;
@@ -81,10 +81,10 @@ class datastream_driver#(int DATASIZE = 8, int WINDOWSIZE = 4);
             trans = new;
             sequencer_to_driver_fifo.get(trans);
             drive_transaction(trans);
-            $display("[datastream_driver.sv] I sent a transaction!!!!");
+            `DEBUG_DISPLAY($sformatf("[datastream_driver.sv] VIF inputs set"));
         end
 
-        $display("[datastream_driver.sv] Driver : end");
+        `DEBUG_DISPLAY($sformatf("[datastream_driver.sv] Driver : end"));
     endtask : run
 
 endclass : datastream_driver

@@ -42,8 +42,9 @@ class datastream_sequencer#(int DATASIZE = 8, int WINDOWSIZE = 4);
         void'(trans.randomize());
 
         foreach (trans.data[i]) begin
-            $display("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]);
+            `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]));
         end
+        `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] sequencer -> driver"));
         sequencer_to_driver_fifo.put(trans);
     endtask
 
@@ -52,8 +53,9 @@ class datastream_sequencer#(int DATASIZE = 8, int WINDOWSIZE = 4);
         trans = new;
         foreach (trans.data[i]) begin
             trans.data[i] <= i;
-            $display("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]);
+            `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]));
         end
+        `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] sequencer -> driver"));
         sequencer_to_driver_fifo.put(trans);
     endtask
 
@@ -62,8 +64,9 @@ class datastream_sequencer#(int DATASIZE = 8, int WINDOWSIZE = 4);
         trans = new;
         foreach (trans.data[i]) begin
             trans.data[i] <= '{ (DATASIZE){0} };
-            $display("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]);
+            `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]));
         end
+        `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] sequencer -> driver"));
         sequencer_to_driver_fifo.put(trans);
     endtask
 
@@ -72,8 +75,9 @@ class datastream_sequencer#(int DATASIZE = 8, int WINDOWSIZE = 4);
         trans = new;
         foreach (trans.data[i]) begin
             trans.data[i] = '{ (DATASIZE){1} };
-            $display("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]);
+            `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]));
         end
+        `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] sequencer -> driver"));
         sequencer_to_driver_fifo.put(trans);
     endtask
 
@@ -84,8 +88,9 @@ class datastream_sequencer#(int DATASIZE = 8, int WINDOWSIZE = 4);
             trans.data[i] <= '{ (DATASIZE){0} };
             trans.data[i][0] <= 1;
             trans.data[i][DATASIZE-1] <= 1;
-            $display("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]);
+            `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]));
         end
+        `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] sequencer -> driver"));
         sequencer_to_driver_fifo.put(trans);
     endtask
 
@@ -96,8 +101,9 @@ class datastream_sequencer#(int DATASIZE = 8, int WINDOWSIZE = 4);
             trans.data[i] <= '{ (DATASIZE){1} };
             trans.data[i][0] <= 0;
             trans.data[i][DATASIZE-1] <= 0;
-            $display("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]);
+            `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]));
         end
+        `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] sequencer -> driver"));
         sequencer_to_driver_fifo.put(trans);
     endtask
 
@@ -107,8 +113,9 @@ class datastream_sequencer#(int DATASIZE = 8, int WINDOWSIZE = 4);
         foreach (trans.data[i]) begin
             trans.data[i][DATASIZE/2-1:0] <= '{ (DATASIZE/2){0} };
             trans.data[i][DATASIZE-1:DATASIZE/2] <= '{ (DATASIZE/2){1} };
-            $display("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]);
+            `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]));
         end
+        `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] sequencer -> driver"));
         sequencer_to_driver_fifo.put(trans);
     endtask
 
@@ -118,8 +125,9 @@ class datastream_sequencer#(int DATASIZE = 8, int WINDOWSIZE = 4);
         foreach (trans.data[i]) begin
             trans.data[i][DATASIZE/2-1:0] <= '{ (DATASIZE/2){1} };
             trans.data[i][DATASIZE-1:DATASIZE/2] <= '{ (DATASIZE/2){0} };
-            $display("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]);
+            `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]));
         end
+        `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] sequencer -> driver"));
         sequencer_to_driver_fifo.put(trans);
     endtask
 
@@ -128,8 +136,9 @@ class datastream_sequencer#(int DATASIZE = 8, int WINDOWSIZE = 4);
         trans = new;
         foreach (trans.data[i]) begin
             trans.data[i] <= '{ {DATASIZE{1'b1, 1'b0}} };
-            $display("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]);
+            `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]));
         end
+        `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] sequencer -> driver"));
         sequencer_to_driver_fifo.put(trans);
     endtask
 
@@ -138,14 +147,15 @@ class datastream_sequencer#(int DATASIZE = 8, int WINDOWSIZE = 4);
         trans = new;
         foreach (trans.data[i]) begin
             trans.data[i] <= '{ {DATASIZE{1'b0, 1'b1}} };
-            $display("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]);
+            `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]));
         end
+        `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] sequencer -> driver"));
         sequencer_to_driver_fifo.put(trans);
     endtask
 
     task run;
         
-        $display("[datastream_sequencer.sv] Sequencer : start");
+        `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] Sequencer : start"));
 
         case (testcase)
             0: begin // Run all
@@ -169,11 +179,10 @@ class datastream_sequencer#(int DATASIZE = 8, int WINDOWSIZE = 4);
             7: begin testcase_half_0_1; end
             8: begin testcase_half_1_0; end
             9: begin testcase_alternate_1_0; end
+            10: begin testcase_alternate_0_1; end
         endcase
 
-        $display("[datastream_sequencer.sv] Sequencer : I sent a transaction");
-
-        $display("[datastream_sequencer.sv] Sequencer : end");
+        `DEBUG_DISPLAY($sformatf("[datastream_sequencer.sv] Sequencer : end"));
     endtask : run
 
 endclass : datastream_sequencer

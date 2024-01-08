@@ -51,7 +51,7 @@ On constate dans le chronogramme de la simulation la taille de la fenêtre est d
 | Test case       | Priority | Test                                                                                               | Verification criteria                           |
 |-----------------|----------|----------------------------------------------------------------------------------------------------|-------------------------------------------------|
 | Random          | 1        | Génère des datas aléatoires                                                                        | Min, max, avg correct                           |
-| Ascending       | 1        | Génère des datas croissantes (0, 1, 2, ...)                                                        | Min = 0, Max = WINDOWSIZE, avg = WINDOWSIZE / 2 |
+| Ascending       | 1        | Génère des datas croissantes (0, 1, 2, ...)              <img src="images/chronogramme_sim.png">                                          | Min = 0, Max = WINDOWSIZE, avg = WINDOWSIZE / 2 |
 | Full 0          | 1        | Génère des datas contenant que des 0                                                               | Min = 0, Max = 0, Avg = 0                       |
 | Full 1          | 1        | Génère des datas contenant que des 1                                                               | Min = 1, Max = 1, Avg = 1                       |
 | Edge 1          | 1        | Génère des data contenant des 1 au LSB et au MSB                                                   | Min, max, avg correct selon calcul              |
@@ -96,6 +96,12 @@ Il devrait rester pendant 3 cycles à 1 lorsque frame_o est actif.
 ## ERRNO 14
 
 ## ERRNO 15
+Il y a une erreur de moyenne :  
+<img src="images/errno15.png">  
+
+Simulation lancée avec `../scripts/sim.do all 0 16 32 15`  
+
+Elle se produit lorsque les données sont toutes à 0 à l'exception du premier et du dernier bit à 1.
 
 ## Autres erreurs relevées
 Si l'on essaye d'utiliser des valeurs nulles pour la taille de la fenêtre, le composant ne fonctionne pas correctement. De même pour la taille des données.

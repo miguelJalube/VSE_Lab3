@@ -42,7 +42,7 @@ class stats_monitor#(int DATASIZE = 8, int WINDOWSIZE = 4);
     stats_fifo_t monitor_to_scoreboard_fifo;
 
     task run;
-        $display("[stats_monitor.sv] Monitor : start");
+        `DEBUG_DISPLAY($sformatf("[stats_monitor.sv] Monitor : start"));
 
         while (1) begin
 
@@ -51,33 +51,31 @@ class stats_monitor#(int DATASIZE = 8, int WINDOWSIZE = 4);
             @(posedge vif.clk_i);
 
             // Lis la valeur min
+            @(negedge vif.clk_i);
             wait(vif.valid_o == 1);
             wait(vif.frame_o == 1);
             stats_trans.min = vif.data_o;
             @(posedge vif.clk_i);
 
             // Lis la valeur max
+            @(negedge vif.clk_i);
             wait(vif.valid_o == 1);
             wait(vif.frame_o == 1);
             stats_trans.max = vif.data_o;
             @(posedge vif.clk_i);
 
             // Lis la valeur moyenne
+            @(negedge vif.clk_i);
             wait(vif.valid_o == 1);
             wait(vif.frame_o == 1);
             stats_trans.moy = vif.data_o;
             @(posedge vif.clk_i);
 
-            /*$display("[stats_monitor.sv] stats_trans.moy : %b", stats_trans.moy);
-            $display("[stats_monitor.sv] stats_trans.min : %b", stats_trans.min);
-            $display("[stats_monitor.sv] stats_trans.max : %b", stats_trans.max);
-            $display("[stats_monitor.sv] TIME:%0t",$time);*/
-
             // At some stage, put a transaction in the FIFO
             monitor_to_scoreboard_fifo.put(stats_trans);
 
         end
-        $display("[stats_monitor.sv] Monitor : end");
+        `DEBUG_DISPLAY($sformatf("[stats_monitor.sv] Monitor : end"));
     endtask : run
 
 endclass : stats_monitor

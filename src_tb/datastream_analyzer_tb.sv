@@ -27,6 +27,15 @@ Ver   Date        Person     Comments
 
 *******************************************************************************/
 
+//`define DEBUG_ENABLED
+
+`ifdef DEBUG_ENABLED
+  `define DEBUG_DISPLAY(msg) \
+    $display("%6tns %s", $time, msg);
+`else
+  `define DEBUG_DISPLAY(msg)
+`endif
+
 `include "objections_pkg.sv"
 `include "datastream_agent/datastream_transaction.sv"
 `include "datastream_agent/datastream_itf.sv"
@@ -90,7 +99,7 @@ module datastream_analyzer_tb#(int TESTCASE = 0, int DATASIZE = 8, int WINDOWSIZ
         while (!objections_pkg::objection::get_inst().should_finish()) begin
             ##1;
         end
-        $display("End of simulation");
+        `DEBUG_DISPLAY($sformatf("End of simulation"));
         $stop;
     end
 

@@ -47,13 +47,11 @@ class datastream_monitor#(int DATASIZE = 8, int WINDOWSIZE = 4);
             foreach (trans.data[i]) begin
                 @(negedge vif.clk_i);
                 trans.data[i] = vif.data_i;
-                $display("[datastream_monitor.sv] data[%2d]:%b", i, trans.data[i]);
-                $display("[datastream_monitor.sv] TIME:%0t", $time);
-                // while (vif.ready_o == 0) begin @(posedge vif.clk_i); end
+                `DEBUG_DISPLAY($sformatf("[datastream_monitor.sv] data[%2d]:%b", i, trans.data[i]));
+                while (vif.ready_o == 0) begin @(posedge vif.clk_i); end
             end
 
-            $display("[datastream_monitor.sv] Sent packet to scoreboard");
-            $display("[datastream_monitor.sv] TIME:%0t", $time);
+            `DEBUG_DISPLAY($sformatf("[datastream_monitor.sv] monitor -> scoreboard"));
 
             // At some stage send the packet to the scoreboard
             datastream_to_scoreboard_fifo.put(trans);
