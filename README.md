@@ -8,7 +8,7 @@
 
 <div style="text-align:center; font-size: 40px; margin-top: 400px">Labo 3 VSE</div>
 <div style="text-align:center; font-size: 40px; margin-top: 15px"></h1>
-<div style="text-align:center; font-size: 18px; margin-top: 50px">07.01.2023</h3>
+<div style="text-align:center; font-size: 18px; margin-top: 50px">07.01.2024</h3>
 <div style="text-align:center; font-size: 18px; margin-top: 5px">Miguel JALUBE</h3>
 <div style="text-align:center; font-size: 18px; margin-top: 5px">Leandro SARAIVA MAIA</h3>
 
@@ -71,6 +71,11 @@ On constate dans le chronogramme de la simulation la taille de la fenêtre est d
 
 <div style="page-break-after: always"></div>
 
+# Quelques détails de conception
+Dans les monitor, il y a parfois des instructions `@(negpos clk)`. Cela est du au fait que lorsqu'on mesure un signal avec SystemVerilog et qu'il vient de changer, on prend sa dernière valeur. On doit donc attendre une demi-période afin d'être sûr de lire la bonne valeur.
+
+Dans `datastream_monitor.sv`, on attend que valid_i passe à 1, on remplit la transaction, puis on attend que valid_i passe à 0. Si on ne faisait pas ça, on commencerait direct avec la prochaine transaction sans attendre qu'elle soit envoyée par le VIF (car valid_i est encore à 1).
+
 # Erreurs relevées
 ## ERRNO 0, 1 et 2
 Aucune erreur car ce sont des cas d'utilisation différents du composant.
@@ -92,8 +97,14 @@ valid_o est tout le temps à 0.
 Il devrait rester pendant 3 cycles à 1 lorsque frame_o est actif.
 
 ## ERRNO 13
+Pas d'erreurs trouvées.
 
 ## ERRNO 14
+Pas d'erreurs trouvées.
+
+<div style="page-break-after: always"></div>
+<div style="page-break-after: always"></div>
+<div style="page-break-after: always"></div>
 
 ## ERRNO 15
 Il y a une erreur de moyenne :  
@@ -105,5 +116,3 @@ Elle se produit lorsque les données sont toutes à 0 à l'exception du premier 
 
 ## Autres erreurs relevées
 Si l'on essaye d'utiliser des valeurs nulles pour la taille de la fenêtre, le composant ne fonctionne pas correctement. De même pour la taille des données.
-
-# Conclusion
