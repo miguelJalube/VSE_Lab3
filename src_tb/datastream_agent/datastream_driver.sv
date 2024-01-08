@@ -43,11 +43,21 @@ class datastream_driver#(int DATASIZE = 8, int WINDOWSIZE = 4);
     task drive_transaction(datastream_transaction packet);
         objections_pkg::objection::get_inst().raise();
 
-        // TODO : Drive the transaction
+        // TODO: Wait on frame_o
+        // temp synchronisation
+        @(posedge vif.clk_i);
+        @(posedge vif.clk_i);
+        @(posedge vif.clk_i);
+        @(posedge vif.clk_i);
+        @(posedge vif.clk_i);
+
         vif.valid_i <= 1;
         foreach (packet.data[i]) begin
             vif.data_i <= packet.data[i];
             @(posedge vif.clk_i);
+            while (vif.ready_o == 0) begin
+                @(posedge vif.clk_i);
+            end
         end
         vif.valid_i <= 0;
         @(posedge vif.clk_i);
@@ -57,8 +67,7 @@ class datastream_driver#(int DATASIZE = 8, int WINDOWSIZE = 4);
 
     task run;
         automatic datastream_transaction#(DATASIZE, WINDOWSIZE) trans;
-        trans = new;
-        $display("Driver : start");
+        $display("[datastream_driver.sv] Driver : start");
 
         vif.valid_i <= 0;
         vif.data_i <= 0;
@@ -69,12 +78,13 @@ class datastream_driver#(int DATASIZE = 8, int WINDOWSIZE = 4);
         @(posedge vif.clk_i);
 
         while (1) begin
+            trans = new;
             sequencer_to_driver_fifo.get(trans);
             drive_transaction(trans);
-            $display("I sent a transaction!!!!");
+            $display("[datastream_driver.sv] I sent a transaction!!!!");
         end
 
-        $display("Driver : end");
+        $display("[datastream_driver.sv] Driver : end");
     endtask : run
 
 endclass : datastream_driver

@@ -39,13 +39,14 @@ module datastream_analyzer_assertions#(int DATASIZE = 8, int WINDOWSIZE = 4)(
     input logic frame_o
 );
 
-// Check if ack arrives 3 clocks after a request
-//assert property (@(posedge clk) req |-> ##3 ack);
+    valid_3_in_frame: assert property (
+        @(posedge clk_i)
+        $rose(frame_o) |-> (frame_o throughout valid_o[->3])
+    );
 
-    /*
+    ready_n_inside_valid: assert property (
+        @(posedge clk_i)
+        $rose(valid_i) |-> (valid_i throughout ready_o[->WINDOWSIZE])
+    );
 
-    min_assert: assert(datastream_trans.data[stats_trans.min] == datastream_trans.data.min());
-    max_assert: assert(datastream_trans.data[stats_trans.max] == datastream_trans.data.max());
-    moy_assert: assert(datastream_trans.data[stats_trans.moy] == datastream_trans.data.avg());
-*/
 endmodule

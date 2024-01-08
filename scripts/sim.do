@@ -19,7 +19,9 @@ proc sim_start { testcase datasize windowsize errno} {
   add wave -r *
   # TODO: Add your assertions here if you wish to observe them in the chronogram
   # In the example below, assert_frame is the name of an assertion
-  # add wave /datastream_analyzer_tb/duv/binded/assert_frame
+  add wave -divider ASSERTIONS
+  add wave /datastream_analyzer_tb/duv/binded/ready_n_inside_valid
+  add wave /datastream_analyzer_tb/duv/binded/valid_3_in_frame
   wave refresh
   run -all
 }

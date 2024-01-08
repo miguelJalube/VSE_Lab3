@@ -35,22 +35,28 @@ class datastream_monitor#(int DATASIZE = 8, int WINDOWSIZE = 4);
 
     int testcase;
 
-    datastream_fifo_t monitor_to_scoreboard_fifo;
+    datastream_fifo_t datastream_to_scoreboard_fifo;
 
     virtual datastream_itf#(DATASIZE) vif;
 
     task run;
         while (1) begin
             datastream_transaction#(DATASIZE, WINDOWSIZE) trans = new;
-            // TODO : Implement the monitor's behavior
+            wait(vif.valid_i == 1);
             
             foreach (trans.data[i]) begin
                 trans.data[i] = vif.data_i;
+                /*$display("[datastream_monitor.sv] data[%2d]:%b", i, trans.data[i]);
+                $display("[datastream_monitor.sv] TIME:%0t", $time);*/
+                // while (vif.ready_o == 0) begin @(posedge vif.clk_i); end
+                @(posedge vif.clk_i);
             end
-            @(posedge vif.clk_i);
+
+            /*$display("[datastream_monitor.sv] Sent packet to scoreboard");
+            $display("[datastream_monitor.sv] TIME:%0t", $time);*/
 
             // At some stage send the packet to the scoreboard
-            monitor_to_scoreboard_fifo.put(trans);
+            datastream_to_scoreboard_fifo.put(trans);
         end
     endtask
 

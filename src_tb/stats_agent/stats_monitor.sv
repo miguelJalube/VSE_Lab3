@@ -42,7 +42,7 @@ class stats_monitor#(int DATASIZE = 8, int WINDOWSIZE = 4);
     stats_fifo_t monitor_to_scoreboard_fifo;
 
     task run;
-        $display("Monitor : start");
+        $display("[stats_monitor.sv] Monitor : start");
 
         while (1) begin
 
@@ -68,11 +68,16 @@ class stats_monitor#(int DATASIZE = 8, int WINDOWSIZE = 4);
             stats_trans.moy = vif.data_o;
             @(posedge vif.clk_i);
 
+            /*$display("[stats_monitor.sv] stats_trans.moy : %b", stats_trans.moy);
+            $display("[stats_monitor.sv] stats_trans.min : %b", stats_trans.min);
+            $display("[stats_monitor.sv] stats_trans.max : %b", stats_trans.max);
+            $display("[stats_monitor.sv] TIME:%0t",$time);*/
+
             // At some stage, put a transaction in the FIFO
             monitor_to_scoreboard_fifo.put(stats_trans);
 
         end
-        $display("Monitor : end");
+        $display("[stats_monitor.sv] Monitor : end");
     endtask : run
 
 endclass : stats_monitor

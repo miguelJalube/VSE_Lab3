@@ -61,8 +61,8 @@ class datastream_agent#(int DATASIZE = 8, int WINDOWSIZE = 4);
 
         sequencer.sequencer_to_driver_fifo = sequencer_to_driver_fifo;
         driver.sequencer_to_driver_fifo = sequencer_to_driver_fifo;
-        // driver.driver_to_scoreboard_fifo = datastream_to_scoreboard_fifo;
-        monitor.monitor_to_scoreboard_fifo = datastream_to_scoreboard_fifo;
+        //driver.driver_to_scoreboard_fifo = datastream_to_scoreboard_fifo;
+        monitor.datastream_to_scoreboard_fifo = datastream_to_scoreboard_fifo;
 
         driver.vif = vif;
         monitor.vif = vif;

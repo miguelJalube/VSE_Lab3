@@ -32,31 +32,39 @@ Ver   Date        Person     Comments
 
 
 class datastream_analyzer_scoreboard#(int DATASIZE = 8, int WINDOWSIZE = 4);
-
     int testcase;
     
-    datastream_fifo_t datastream_to_scoreboard_fifo;
-    stats_fifo_t monitor_to_scoreboard_fifo;
+    datastream_fifo_t datastream_to_scoreboard_fifo; // better name: datastream_monitor_to_scoreboard_fifo
+    stats_fifo_t monitor_to_scoreboard_fifo; // better name: stats_monitor_to_scoreboard_fifo
 
     task run;
         bit [DATASIZE-1:0] min_val;
+        
         bit [DATASIZE-1:0] max_val;
         bit [DATASIZE-1:0] mean_val;
+        bit [DATASIZE-1:0] sum;
+        int unsigned i;
     begin
-        automatic datastream_transaction datastream_trans = new;
-        automatic stats_transaction stats_trans = new;
-
-        $display("Scoreboard : Start");
+        $display("[datastream_analyzer_scoreboard.sv] Scoreboard : Start");
 
         while (1) begin
+
+            automatic datastream_transaction datastream_trans = new;
+            automatic stats_transaction stats_trans = new;
             
             // Get data from the monitors. Here there is one transaction from each,
             // but it can obviously be changed if required
             datastream_to_scoreboard_fifo.get(datastream_trans);
             monitor_to_scoreboard_fifo.get(stats_trans);
+            
+            $display("START =============================================");
+            foreach (datastream_trans.data[i]) begin
+                $display("[datastream_analyzer_scoreboard.sv] data[%2d] : %b", i, datastream_trans.data[i]);
+            end
+            $display("END   =============================================");
 
             // display types
-            $display("min: %b", stats_trans.min);
+            $display("[datastream_analyzer_scoreboard.sv] min    : %b", stats_trans.min);
             
             // compute min
             min_val = datastream_trans.data[0];
@@ -65,7 +73,7 @@ class datastream_analyzer_scoreboard#(int DATASIZE = 8, int WINDOWSIZE = 4);
                     min_val = datastream_trans.data[i];
                 end
             end
-            $display("min_val: %b", min_val);
+            $display("[datastream_analyzer_scoreboard.sv] min_val : %b", min_val);
 
             // compute max
             max_val = datastream_trans.data[0];
@@ -74,23 +82,25 @@ class datastream_analyzer_scoreboard#(int DATASIZE = 8, int WINDOWSIZE = 4);
                     max_val = datastream_trans.data[i];
                 end
             end
-            $display("max_val: %b", max_val);
+            $display("[datastream_analyzer_scoreboard.sv] max_val : %b", max_val);
 
             // compute mean
             mean_val = datastream_trans.data[0];
+            sum = 0;
             foreach (datastream_trans.data[i]) begin
-                if (datastream_trans.data[i] < mean_val) begin
-                    mean_val = datastream_trans.data[i];
+                sum = sum + datastream_trans.data[i];
+                if (i != 0) begin
+                    mean_val = sum / i;
                 end
             end
-            $display("mean_val: %b", mean_val);
+            $display("[datastream_analyzer_scoreboard.sv] mean_val: %b", mean_val);
             
             assert(stats_trans.min == min_val);
             assert(stats_trans.max == max_val);
             assert(stats_trans.moy == mean_val);
         end
 
-        $display("Scoreboard : End");
+        $display("[datastream_analyzer_scoreboard.sv] Scoreboard : End");
     
     end
     endtask : run
