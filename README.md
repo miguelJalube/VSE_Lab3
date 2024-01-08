@@ -16,19 +16,37 @@
 
 # Contexte
 
+Ce rapport est redigé dans le cadre du laboratoire 3 du cours de Vérification des systèmes embarqués de la HEIG-VD. Le laboratoire concerne un composant à tester en System Verilog.
+
 ## Objectif
 
+Tester le fonctionnement d'un analyseur de données grâce à un banc de test dont le fonctionnement est semblable à UVM.
+
+On releve deux types de tests à faire :
+- Tests des données : Valident que les données en sortie soient cohérentes avec les entrées. (Assertions dans `datastream_analyzer_scoreboard.sv`)
+- Tests de fonctionnement : Valident que le composant fonctionne correctement et respecte les timings. (Assertions dans `datastream_analyzer_assertions.sv`)
 
 ## Description du composant
 
+L'analyseur prend en entrée des fenêtres de données d'une taille définie et retourne en sortie differents calculs sur ces données, notamment la valeur minimale, maximale et la moyenne de la fenêtre.
 
+<img src="images/composant.png">
 
 <div style="page-break-after: always"></div>
 
 ## Chronogramme de fonctionnement
 
+Voici le chronogramme de fonctionnement comme décrit dans la consigne du laboratoire :
+<img src="images/chronogramme.png">
+
+Voici le chronogramme de fonctionnement lors de la simulation :
+<img src="images/chronogramme_sim.png">
+
+On constate dans le chronogramme de la simulation la taille de la fenêtre est de 4 et envoi les valeurs 70, 220, 127, 164. Respectivement la valeur minimale, maximale et la moyenne sont 70, 220 et 145(entière). Le chronogramme respecte l'ordre défini pour les sorties, soit min, max puis moy.
 
 # Plan de vérification
+
+## Tests des données
 
 | Test case       | Priority | Test                                                                                               | Verification criteria                           |
 |-----------------|----------|----------------------------------------------------------------------------------------------------|-------------------------------------------------|
@@ -43,7 +61,7 @@
 | Alternate 1 0   | 1        | Génère des datas contenant 1 puis 0 puis 1 puis 0 ...                                              | Min, max, avg correct selon calcul              |
 | Alternate 0 1   | 1        | Génère des datas contenant 0 puis 1 puis 0 puis 1 ...                                              | Min, max, avg correct selon calcul              |
 
-# Asserts
+## Tests de fonctionnement
 
 | Assert | Errno 0 | Errno 1 | Errno 2 | Errno 10 | Errno 11 | Errno 12 | Errno 13 | Errno 14 | Errno 15 |
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -78,3 +96,8 @@ Il devrait rester pendant 3 cycles à 1 lorsque frame_o est actif.
 ## ERRNO 14
 
 ## ERRNO 15
+
+## Autres erreurs relevées
+Si l'on essaye d'utiliser des valeurs nulles pour la taille de la fenêtre, le composant ne fonctionne pas correctement. De même pour la taille des données.
+
+# Conclusion
