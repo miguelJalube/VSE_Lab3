@@ -45,18 +45,19 @@ class datastream_monitor#(int DATASIZE = 8, int WINDOWSIZE = 4);
             wait(vif.valid_i == 1);
             
             foreach (trans.data[i]) begin
+                @(negedge vif.clk_i);
                 trans.data[i] = vif.data_i;
-                /*$display("[datastream_monitor.sv] data[%2d]:%b", i, trans.data[i]);
-                $display("[datastream_monitor.sv] TIME:%0t", $time);*/
+                $display("[datastream_monitor.sv] data[%2d]:%b", i, trans.data[i]);
+                $display("[datastream_monitor.sv] TIME:%0t", $time);
                 // while (vif.ready_o == 0) begin @(posedge vif.clk_i); end
-                @(posedge vif.clk_i);
             end
 
-            /*$display("[datastream_monitor.sv] Sent packet to scoreboard");
-            $display("[datastream_monitor.sv] TIME:%0t", $time);*/
+            $display("[datastream_monitor.sv] Sent packet to scoreboard");
+            $display("[datastream_monitor.sv] TIME:%0t", $time);
 
             // At some stage send the packet to the scoreboard
             datastream_to_scoreboard_fifo.put(trans);
+            wait(vif.valid_i == 0);
         end
     endtask
 

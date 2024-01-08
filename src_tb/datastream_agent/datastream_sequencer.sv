@@ -40,6 +40,10 @@ class datastream_sequencer#(int DATASIZE = 8, int WINDOWSIZE = 4);
         automatic datastream_transaction#(DATASIZE, WINDOWSIZE) trans;
         trans = new;
         void'(trans.randomize());
+
+        foreach (trans.data[i]) begin
+            $display("[datastream_sequencer.sv] trans.data[%2d] : %b", i, trans.data[i]);
+        end
         sequencer_to_driver_fifo.put(trans);
     endtask
 
